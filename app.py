@@ -16,7 +16,7 @@ db.init_app(app)
 def intro():
     return "Hello World"
 
-@app.route("/<string:name>")
+@app.route("/<name>")
 def get_book(name):
     book = Library.query.filter(Library.name.contains(name)).all()
     data = []
