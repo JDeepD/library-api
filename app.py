@@ -116,7 +116,7 @@ if __name__ == "__main__":
         print("Database created")
     elif "seeddb" in sys.argv:
         with app.app_context():
-            book = Library(ISBN = "111-222-222", name="Sherlock", author = "JJ", copies=4)
+            book = Library(ISBN = "9781789097924", name="Sherlock Holmes: The Further Adventures", author = "MacBird", copies=3)
             db.session.add(book)
             db.session.commit()
         print("Database seeded with 1 entry")
