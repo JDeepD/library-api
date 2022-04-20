@@ -26,15 +26,12 @@ def get_book(name):
             "name" : dats.name,
             "author" : dats.author,
             "copies" : dats.copies,
-            "cover_url" : dats.cover_url,
         }
         data.append(atom)
 
-    resp = jsonify(data)
-    resp.headers.add('Access-Control-Allow-Origin', '*')
-    return resp
-
-
+    response = jsonify(data)
+    response.headers.add('Access-Control-Allow-Origin', '*')
+    return response
 
 @app.route("/delete/<ISBN>")
 def delete_book(ISBN):
@@ -44,10 +41,13 @@ def delete_book(ISBN):
         db.session.commit()
         response = jsonify({"message" : "deleted"})
         response.status = 201
+        response.headers.add('Access-Control-Allow-Origin', '*')
         return response
     except:
         response = jsonify({"message" : "error"})
         response.status = 400 
+
+        response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
 @app.route("/add/", methods=["POST"])
@@ -56,17 +56,17 @@ def add_book():
     name = request.form.get("name")
     author = request.form.get("author")
     copies = request.form.get("copies")
-    cover_url = request.form.get("cover_url")
 
-    if not all((ISBN, name, author, copies, cover_url)):
+    if not all((ISBN, name, author, copies)):
         return "Missing args\n", 400 
 
-    book = Library(ISBN = ISBN, name=name, author=author, copies=copies, cover_url=cover_url)
+    book = Library(ISBN = ISBN, name=name, author=author, copies=copies)
     db.session.add(book)
     db.session.commit()
 
     response = jsonify({"message" : "success"})
     response.status_code = 201
+    response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
 if __name__ == "__main__":
@@ -76,7 +76,7 @@ if __name__ == "__main__":
         print("Database created")
     elif "seeddb" in sys.argv:
         with app.app_context():
-            book = Library(ISBN = "111-222-222", name="Sherlock", author = "JJ", copies=4, cover_url="sherlock.jpg")
+            book = Library(ISBN = "111-222-222", name="Sherlock", author = "JJ", copies=4)
             db.session.add(book)
             db.session.commit()
         print("Database seeded with 1 entry")
