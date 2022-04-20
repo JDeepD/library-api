@@ -7,3 +7,4 @@ class Library(db.Model): #type: ignore
     name = db.Column(db.String, index = True, nullable=False)
     author = db.Column(db.String, nullable=False)
     copies = db.Column(db.Integer, nullable=False)
+    booked_by = db.Column(db.String, nullable=True)

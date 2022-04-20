@@ -69,6 +69,46 @@ def add_book():
     response.headers.add('Access-Control-Allow-Origin', '*')
     return response
 
+@app.route("/removebooked/", methods=['POST'])
+def remove_booked():
+    ISBN = request.form.get("ISBN")
+
+    book = Library.query.filter(Library.ISBN == ISBN).first()
+    if book is not None:
+        book.booked_by = None 
+        response = jsonify({"message" : "success"})
+        response.status_code = 201
+        db.session.commit()
+    else:
+        response = jsonify({"message" : "Failed. Book not found. Check ISBN"})
+        response.status_code = 400
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
+
+@app.route("/book/", methods=["POST"])
+def book_book():
+    ISBN = request.form.get("ISBN")
+    booked_by = request.form.get("booked_by")
+    book = Library.query.filter(Library.ISBN == ISBN).first()
+    print(book)
+    if book is not None:
+        if book.booked_by is None:
+            book.booked_by = booked_by
+            response = jsonify({"message" : "success"})
+            response.status_code = 201
+            db.session.commit()
+        else:
+            response = jsonify({"message" : "Already Booked"})
+            response.status_code = 401
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+    else:
+        response = jsonify({"message" : "failed"})
+        response.status_code = 400
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        return response
+
 if __name__ == "__main__":
     if "createdb" in sys.argv:
         with app.app_context():
