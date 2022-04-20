@@ -16,7 +16,7 @@ db.init_app(app)
 def intro():
     return "Hello World"
 
-@app.route("/<name>")
+@app.route("/<string:name>")
 def get_book(name):
     book = Library.query.filter(Library.name.contains(name)).all()
     data = []
@@ -30,7 +30,25 @@ def get_book(name):
         }
         data.append(atom)
 
-    return jsonify(data)
+    resp = jsonify(data)
+    resp.headers.add('Access-Control-Allow-Origin', '*')
+    return resp
+
+
+
+@app.route("/delete/<ISBN>")
+def delete_book(ISBN):
+    book = Library.query.filter(Library.ISBN == ISBN).first()
+    try:
+        db.session.delete(book)
+        db.session.commit()
+        response = jsonify({"message" : "deleted"})
+        response.status = 201
+        return response
+    except:
+        response = jsonify({"message" : "error"})
+        response.status = 400 
+        return response
 
 @app.route("/add/", methods=["POST"])
 def add_book():
