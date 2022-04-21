@@ -28,6 +28,7 @@ def get_book(name):
             "name" : dats.name,
             "author" : dats.author,
             "copies" : dats.copies,
+            "booked_by" : dats.booked_by
         }
         data.append(atom)
 
