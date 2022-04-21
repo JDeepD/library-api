@@ -54,18 +54,23 @@ def delete_book(ISBN):
 
 @app.route("/add/", methods=["POST", "GET"])
 def add_book():
-    ISBN = request.form.get("ISBN")
-    name = request.form.get("name")
-    author = request.form.get("author")
-    copies = request.form.get("copies")
+    data_dict = request.get_json()
+    # ISBN = request.form.get("ISBN")
+    # name = request.form.get("name")
+    # author = request.form.get("author")
+    # copies = request.form.get("copies")
+    ISBN = data_dict["ISBN"]
+    name = data_dict["name"]
+    author = data_dict["author"]
+    copies = data_dict["copies"]
 
     book = Library(ISBN = ISBN, name=name, author=author, copies=copies)
     db.session.add(book)
     db.session.commit()
 
     response = jsonify({"message" : "success"})
-    response.status_code = 201
     response.headers.add('Access-Control-Allow-Origin', '*')
+    response.status_code = 201
     return response
 
 @app.route("/removebooked/", methods=['POST'])
