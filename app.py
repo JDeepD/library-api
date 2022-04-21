@@ -59,9 +59,6 @@ def add_book():
     author = request.form.get("author")
     copies = request.form.get("copies")
 
-    if not all((ISBN, name, author, copies)):
-        return "Missing args\n", 402
-
     book = Library(ISBN = ISBN, name=name, author=author, copies=copies)
     db.session.add(book)
     db.session.commit()
