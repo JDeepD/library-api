@@ -52,7 +52,7 @@ def delete_book(ISBN):
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-@app.route("/add/", methods=["POST", "GET"])
+@app.route("/add/", methods=["POST"])
 def add_book():
     data_dict = request.get_json()
     # ISBN = request.form.get("ISBN")
