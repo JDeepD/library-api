@@ -44,13 +44,13 @@ def delete_book(ISBN):
         response = jsonify({"message" : "deleted"})
         response.status = 201
         response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
     except:
         response = jsonify({"message" : "error"})
         response.status = 400 
-
         response.headers.add('Access-Control-Allow-Origin', '*')
-        return response
+
+    return response
+
 
 @app.route("/add/", methods=["POST"])
 def add_book():
@@ -80,7 +80,8 @@ def add_book():
 
 @app.route("/removebooked/", methods=['POST'])
 def remove_booked():
-    ISBN = request.form.get("ISBN")
+    data_dict = request.get_json()
+    ISBN = data_dict["ISBN"]             #type: ignore
 
     book = Library.query.filter(Library.ISBN == ISBN).first()
     if book is not None:
