@@ -1,5 +1,6 @@
 import sys
 from flask import Flask, jsonify, request
+from flask_cors import CORS
 from models import db, Library # type: ignore
 
 def create_app():
@@ -10,6 +11,7 @@ def create_app():
     return app
 
 app = create_app()
+CORS(app)
 db.init_app(app)
 
 @app.route("/")
