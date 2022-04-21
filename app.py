@@ -95,17 +95,18 @@ def remove_booked():
         response.headers.add('Access-Control-Allow-Origin', '*')
         return response
 
-
 @app.route("/book/", methods=["POST"])
+
 def book_book():
-    ISBN = request.form.get("ISBN")
-    booked_by = request.form.get("booked_by")
+    data_dict = request.get_json()
+    ISBN = data_dict["ISBN"]             #type: ignore
+    booked_by = data_dict["booked_by"]   #type: ignore
     book = Library.query.filter(Library.ISBN == ISBN).first()
-    print(book)
+
     if book is not None:
         if book.booked_by is None:
             book.booked_by = booked_by
-            response = jsonify({"message" : "success"})
+            response = jsonify({"message" : "success", "booked" : booked_by})
             response.status_code = 201
             db.session.commit()
         else:
