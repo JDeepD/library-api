@@ -55,23 +55,28 @@ def delete_book(ISBN):
 @app.route("/add/", methods=["POST"])
 def add_book():
     data_dict = request.get_json()
-    # ISBN = request.form.get("ISBN")
-    # name = request.form.get("name")
-    # author = request.form.get("author")
-    # copies = request.form.get("copies")
-    ISBN = data_dict["ISBN"]
-    name = data_dict["name"]
-    author = data_dict["author"]
-    copies = data_dict["copies"]
+    ISBN = data_dict["ISBN"]             #type: ignore
+    name = data_dict["name"]             #type: ignore
+    author = data_dict["author"]         #type: ignore
+    copies = data_dict["copies"]         #type: ignore
 
-    book = Library(ISBN = ISBN, name=name, author=author, copies=copies)
-    db.session.add(book)
-    db.session.commit()
+    tb = Library.query.filter(Library.ISBN == ISBN).first()
+    
+    if tb is None:
+        book = Library(ISBN = ISBN, name=name, author=author, copies=copies)
+        db.session.add(book)
+        db.session.commit()
+        response = jsonify({"message" : "success"})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.status_code = 201
+        return response
 
-    response = jsonify({"message" : "success"})
-    response.headers.add('Access-Control-Allow-Origin', '*')
-    response.status_code = 201
-    return response
+    else:
+        response = jsonify({"message" : "failed"})
+        response.headers.add('Access-Control-Allow-Origin', '*')
+        response.status_code = 401
+        return response
+
 
 @app.route("/removebooked/", methods=['POST'])
 def remove_booked():
