@@ -172,7 +172,7 @@ def lend_book():
         
 
         elif book.booked_by == None:
-            book.lend_by = book.booked_by
+            book.lend_by = wanted_by
             book.copies -= 1
             response = jsonify({"message" : "no prev booking. successfully lent"})
             response.status = 200
