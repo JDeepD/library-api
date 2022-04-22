@@ -128,12 +128,14 @@ def book_book():
     ISBN = data_dict["ISBN"]             #type: ignore
     booked_by = data_dict["booked_by"]   #type: ignore
     booked_on = data_dict["booked_on"]   #type: ignore
+    return_date = data_dict["return_date"] #type: ignore
     book = Library.query.filter(Library.ISBN == ISBN).first()
 
     if book is not None:
         if book.booked_by is None:
             book.booked_by = booked_by
             book.booked_on = booked_on
+            book.return_date = return_date
             response = jsonify({"message" : "success", "booked" : booked_by})
             response.status_code = 201
             db.session.commit()
